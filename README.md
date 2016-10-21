@@ -1,6 +1,6 @@
 # Dawn
 
-文档可以参考这个：
+文档参考：
 
 https://github.com/yuezhongxin/CNBlogs.Apply.Sample
 
