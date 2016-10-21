@@ -1,9 +1,0 @@
-E:\Code\Git\Dawn\Dawn.Application.Interfaces\bin\Debug\Dawn.Application.Interfaces.dll
-E:\Code\Git\Dawn\Dawn.Application.Interfaces\bin\Debug\Dawn.Application.Interfaces.pdb
-E:\Code\Git\Dawn\Dawn.Application.Interfaces\bin\Debug\Dawn.Domain.ValueObjects.dll
-E:\Code\Git\Dawn\Dawn.Application.Interfaces\bin\Debug\Newtonsoft.Json.dll
-E:\Code\Git\Dawn\Dawn.Application.Interfaces\bin\Debug\Dawn.Domain.ValueObjects.pdb
-E:\Code\Git\Dawn\Dawn.Application.Interfaces\bin\Debug\Newtonsoft.Json.xml
-E:\Code\Git\Dawn\Dawn.Application.Interfaces\obj\Debug\Dawn.Application.Interfaces.csprojResolveAssemblyReference.cache
-E:\Code\Git\Dawn\Dawn.Application.Interfaces\obj\Debug\Dawn.Application.Interfaces.dll
-E:\Code\Git\Dawn\Dawn.Application.Interfaces\obj\Debug\Dawn.Application.Interfaces.pdb

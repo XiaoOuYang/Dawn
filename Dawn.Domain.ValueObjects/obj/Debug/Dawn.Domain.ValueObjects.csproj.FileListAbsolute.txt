@@ -1,6 +1,0 @@
-E:\Code\Git\Dawn\Dawn.Domain.ValueObjects\bin\Debug\Dawn.Domain.ValueObjects.dll
-E:\Code\Git\Dawn\Dawn.Domain.ValueObjects\bin\Debug\Dawn.Domain.ValueObjects.pdb
-E:\Code\Git\Dawn\Dawn.Domain.ValueObjects\bin\Debug\Newtonsoft.Json.dll
-E:\Code\Git\Dawn\Dawn.Domain.ValueObjects\bin\Debug\Newtonsoft.Json.xml
-E:\Code\Git\Dawn\Dawn.Domain.ValueObjects\obj\Debug\Dawn.Domain.ValueObjects.dll
-E:\Code\Git\Dawn\Dawn.Domain.ValueObjects\obj\Debug\Dawn.Domain.ValueObjects.pdb
