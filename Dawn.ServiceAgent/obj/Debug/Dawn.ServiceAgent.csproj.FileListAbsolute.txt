@@ -1,0 +1,9 @@
+E:\Code\Git\Dawn\Dawn.ServiceAgent\bin\Debug\Dawn.ServiceAgent.dll
+E:\Code\Git\Dawn\Dawn.ServiceAgent\bin\Debug\Dawn.ServiceAgent.pdb
+E:\Code\Git\Dawn\Dawn.ServiceAgent\bin\Debug\Dawn.Domain.ValueObjects.dll
+E:\Code\Git\Dawn\Dawn.ServiceAgent\bin\Debug\Newtonsoft.Json.dll
+E:\Code\Git\Dawn\Dawn.ServiceAgent\bin\Debug\Dawn.Domain.ValueObjects.pdb
+E:\Code\Git\Dawn\Dawn.ServiceAgent\bin\Debug\Newtonsoft.Json.xml
+E:\Code\Git\Dawn\Dawn.ServiceAgent\obj\Debug\Dawn.ServiceAgent.csprojResolveAssemblyReference.cache
+E:\Code\Git\Dawn\Dawn.ServiceAgent\obj\Debug\Dawn.ServiceAgent.dll
+E:\Code\Git\Dawn\Dawn.ServiceAgent\obj\Debug\Dawn.ServiceAgent.pdb

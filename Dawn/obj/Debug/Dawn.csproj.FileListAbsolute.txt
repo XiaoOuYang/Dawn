@@ -1,0 +1,5 @@
+E:\Code\Git\Dawn\Dawn\bin\Debug\Dawn.dll
+E:\Code\Git\Dawn\Dawn\bin\Debug\Dawn.pdb
+E:\Code\Git\Dawn\Dawn\obj\Debug\Dawn.csprojResolveAssemblyReference.cache
+E:\Code\Git\Dawn\Dawn\obj\Debug\Dawn.dll
+E:\Code\Git\Dawn\Dawn\obj\Debug\Dawn.pdb

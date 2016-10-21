@@ -1,0 +1,9 @@
+E:\Code\Git\Dawn\Dawn.DbContextScope\bin\Debug\Dawn.DbContextScope.dll.config
+E:\Code\Git\Dawn\Dawn.DbContextScope\bin\Debug\Dawn.DbContextScope.dll
+E:\Code\Git\Dawn\Dawn.DbContextScope\bin\Debug\Dawn.DbContextScope.pdb
+E:\Code\Git\Dawn\Dawn.DbContextScope\bin\Debug\EntityFramework.dll
+E:\Code\Git\Dawn\Dawn.DbContextScope\bin\Debug\EntityFramework.SqlServer.dll
+E:\Code\Git\Dawn\Dawn.DbContextScope\bin\Debug\EntityFramework.xml
+E:\Code\Git\Dawn\Dawn.DbContextScope\bin\Debug\EntityFramework.SqlServer.xml
+E:\Code\Git\Dawn\Dawn.DbContextScope\obj\Debug\Dawn.DbContextScope.dll
+E:\Code\Git\Dawn\Dawn.DbContextScope\obj\Debug\Dawn.DbContextScope.pdb
