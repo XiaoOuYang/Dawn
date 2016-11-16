@@ -1,5 +1,6 @@
 ﻿using Dawn.Application.Interfaces;
 using Dawn.DbContextScope.Interfaces;
+using Dawn.Domain.DomainServices;
 using Dawn.Domain.Entity;
 using Dawn.Domain.ValueObjects;
 using Dawn.Repository.EF;
@@ -17,27 +18,30 @@ namespace Dawn.Application.Services
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly IBlogChangeApplyRepository _blogChangeApplyRepository;
+        private readonly IApplyAuthenticationService _applyAuthenticationService;
 
         public BlogChangeApplyService(IDbContextScopeFactory dbContextScopeFactory,
-            IBlogChangeApplyRepository blogChangeApplyRepository)
+            IBlogChangeApplyRepository blogChangeApplyRepository,
+            IApplyAuthenticationService applyAuthenticationService)
         {
             _dbContextScopeFactory = dbContextScopeFactory;
             _blogChangeApplyRepository = blogChangeApplyRepository;
+            _applyAuthenticationService = applyAuthenticationService;
 
         }
         public SubmitResult Apply(string targetBlogApp, string reason, string userLoginName, string ip)
         {
             var user = UserService.GetUserByLoginName(userLoginName).Result;
 
-
+            
             using (var dbScope = _dbContextScopeFactory.Create())
             {
 
-                //var verfiyResult = _applyAuthenticationService.VerfiyForBlogChange(user, targetBlogApp);
-                //if (!string.IsNullOrEmpty(verfiyResult))
-                //{
-                //    return new SubmitResult { IsSucceed = false, Message = verfiyResult };
-                //}
+                var verfiyResult = _applyAuthenticationService.VerfiyForBlogChange(user, targetBlogApp);
+                if (!string.IsNullOrEmpty(verfiyResult))
+                {
+                    return new SubmitResult { IsSucceed = false, Message = verfiyResult };
+                }
 
                 try
                 {
