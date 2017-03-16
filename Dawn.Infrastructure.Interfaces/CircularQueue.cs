@@ -78,8 +78,9 @@ namespace Dawn.Infrastructure.Interfaces
                 CycleNum = seconds / _slotCount,
                 TaskAction = taskAction
             };
-
+            int index = (seconds % _slotCount) + _currentIndex;
             _queues.ElementAt((seconds % _slotCount) + _currentIndex).Add(taskContext);
+
         }
 
         private void Move()
@@ -94,10 +95,13 @@ namespace Dawn.Infrastructure.Interfaces
 
             var tasks = _queues[index];
             var executeTasks = tasks.Where(q => q.CycleNum <= 0).ToList();
-            var awaitTasks = tasks.Where(q => q.CycleNum > 0);
-            foreach (var task in awaitTasks)
-                task.CycleNum--;
-            _queues[index] = awaitTasks.ToList();
+            var awaitTasks = tasks.Where(q => q.CycleNum > 0).Select(t => new TaskContent
+            {
+                CycleNum = t.CycleNum - 1,
+                TaskAction = t.TaskAction
+            }).ToList();
+
+            _queues[index] = awaitTasks;
 
             Task.Factory.StartNew(() =>
             {
