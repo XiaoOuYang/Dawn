@@ -60,6 +60,28 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dawn.Application.Interfaces\Dawn.Application.Interfaces.csproj">
+      <Project>{b17fe6d6-cf52-4e3d-81ef-a2022de6ee91}</Project>
+      <Name>Dawn.Application.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dawn.Apply.BootStrapper\Dawn.Apply.BootStrapper.csproj">
+      <Project>{0d640be7-4d26-4888-96fa-d529375de4dc}</Project>
+      <Name>Dawn.Apply.BootStrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dawn.Domain.ValueObjects\Dawn.Domain.ValueObjects.csproj">
+      <Project>{1c1bfe3d-47b7-43b8-aee8-e38b9829ee3c}</Project>
+      <Name>Dawn.Domain.ValueObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dawn.Infrastructure.Interfaces\Dawn.Infrastructure.Interfaces.csproj">
+      <Project>{3267c8d1-1df0-4fa4-8033-2c5abe0a0f53}</Project>
+      <Name>Dawn.Infrastructure.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dawn.Repository.Interfaces\Dawn.Repository.Interfaces.csproj">
+      <Project>{558b9690-6739-41bd-a47c-6317463d079b}</Project>
+      <Name>Dawn.Repository.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
