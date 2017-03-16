@@ -61,7 +61,10 @@ namespace Dawn.Infrastructure.Interfaces
         public void Stop()
         {
             if (_started)
+            {
                 _timer.Stop();
+                _started = false;
+            }
         }
 
         /// <summary>
