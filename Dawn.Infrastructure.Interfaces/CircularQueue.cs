@@ -16,15 +16,15 @@ namespace Dawn.Infrastructure.Interfaces
         public static CircularQueue Instance = new CircularQueue(60);
 
         /// <summary>
-        /// 插槽的数量
+        /// 
         /// </summary>
-        /// <param name="slotCount"></param>
-        private CircularQueue(int slotCount)
+        /// <param name="slotNum">插槽的数量</param>
+        private CircularQueue(int slotNum)
         {
-            _slotCount = slotCount;
-            _queues = new List<IList<TaskContent>>(_slotCount);
+            _slotNum = slotNum;
+            _queues = new List<IList<TaskContent>>(_slotNum);
 
-            for (int i = 0; i < _slotCount; i++)
+            for (int i = 0; i < _slotNum; i++)
                 _queues.Add(new List<TaskContent>());
 
             _timer = new System.Timers.Timer(1000);
@@ -37,7 +37,7 @@ namespace Dawn.Infrastructure.Interfaces
         /// <summary>
         /// 插槽的数量
         /// </summary>
-        private int _slotCount = 60;
+        private int _slotNum = 60;
 
         private IList<IList<TaskContent>> _queues;
 
@@ -74,15 +74,14 @@ namespace Dawn.Infrastructure.Interfaces
         /// <param name="seconds">延迟多少秒执行</param>
         public void AddTask(Action taskAction, int seconds)
         {
-            int cycleNum = seconds / _slotCount;
 
             var taskContext = new TaskContent()
             {
-                CycleNum = seconds / _slotCount,
+                CycleNum = seconds / _slotNum,//周期
                 TaskAction = taskAction
             };
-            int index = (seconds % _slotCount) + _currentIndex;
-            _queues.ElementAt((seconds % _slotCount) + _currentIndex).Add(taskContext);
+
+            _queues.ElementAt((seconds % _slotNum) + _currentIndex).Add(taskContext);
 
         }
 
@@ -91,35 +90,44 @@ namespace Dawn.Infrastructure.Interfaces
             int index = _currentIndex;
 
             //如果当前下标等于插槽数 再从0开始
-            if (_currentIndex == (_slotCount - 1))
+            if (_currentIndex == (_slotNum - 1))
                 _currentIndex = 0;
             else
                 _currentIndex++;
 
             var tasks = _queues[index];
-            var executeTasks = tasks.Where(q => q.CycleNum <= 0).ToList();
-            var awaitTasks = tasks.Where(q => q.CycleNum > 0).Select(t => new TaskContent
-            {
-                CycleNum = t.CycleNum - 1,
-                TaskAction = t.TaskAction
-            }).ToList();
 
-            _queues[index] = awaitTasks;
-
-            Task.Factory.StartNew(() =>
+            if (tasks.Count > 0)
             {
-                foreach (var item in executeTasks)
+                var executeTasks = tasks.Where(q => q.CycleNum <= 0).ToList();
+
+                var awaitTasks = tasks.Where(q => q.CycleNum > 0).Select(t => new TaskContent
                 {
-                    try
+                    CycleNum = t.CycleNum - 1,
+                    TaskAction = t.TaskAction
+                }).ToList();
+
+                _queues[index] = awaitTasks;
+
+                if (executeTasks.Count > 0)
+                {
+                    Task.Factory.StartNew(() =>
                     {
-                        item.TaskAction();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
+                        foreach (var item in executeTasks)
+                        {
+                            try
+                            {
+                                item.TaskAction();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+                        }
+                    });
                 }
-            });
+
+            }
         }
 
 
