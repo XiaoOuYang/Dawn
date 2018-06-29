@@ -11,7 +11,7 @@ namespace Dawn.Domain.DomainEvents
         public async Task Publish<TEvent>(TEvent @event)
             where TEvent : IEvent
         {
-            var eventHandler = IocContainer.Default.Resolve<IEventHandler<TEvent>>();
+            var eventHandler = IocContainer.Instance.Resolve<IEventHandler<TEvent>>();
             await eventHandler.Handle(@event);
         }
     }

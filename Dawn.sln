@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawn.Domain.Commands", "Daw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawn.CommandHandlers", "Dawn.CommandHandlers\Dawn.CommandHandlers.csproj", "{B7A59595-0511-44BB-8902-44B00E40C42A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawn.Application", "Dawn.Application\Dawn.Application.csproj", "{8C587584-503F-461F-B2ED-26989F523571}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,10 @@ Global
 		{B7A59595-0511-44BB-8902-44B00E40C42A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7A59595-0511-44BB-8902-44B00E40C42A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7A59595-0511-44BB-8902-44B00E40C42A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C587584-503F-461F-B2ED-26989F523571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C587584-503F-461F-B2ED-26989F523571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C587584-503F-461F-B2ED-26989F523571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C587584-503F-461F-B2ED-26989F523571}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,5 +152,6 @@ Global
 		{0D640BE7-4D26-4888-96FA-D529375DE4DC} = {B49EFCA7-9D4C-4E0C-A646-4428A849EDC9}
 		{BBB18B58-B0D8-4971-A0A5-8D473AB3DBEC} = {4882001A-16B6-4B87-9869-C454B7F39B98}
 		{B7A59595-0511-44BB-8902-44B00E40C42A} = {4882001A-16B6-4B87-9869-C454B7F39B98}
+		{8C587584-503F-461F-B2ED-26989F523571} = {9E5DED89-9D10-4F8D-8072-C716E3120D42}
 	EndGlobalSection
 EndGlobal

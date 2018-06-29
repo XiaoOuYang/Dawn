@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Dawn.Infrastructure.Interfaces.Extensions;
 
 namespace Dawn.Infrastructure.Interfaces
 {
+
     /// <summary>
     /// 创建Excel文件
     /// </summary>
@@ -54,9 +54,9 @@ namespace Dawn.Infrastructure.Interfaces
         /// <param name="sheetName"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static Excel ListToExcel<T>(ICollection<T> list, string sheetName, string fileName)
+        public static Excel ListToExcel<T>(ICollection<T> list, string sheetName, string fileName, Action<string, IWorkbook, ICell> mapCell = null)
         {
-            var excel = new Excel(fileName).AddSheet(list, sheetName);
+            var excel = new Excel(fileName).AddSheet(list, sheetName, mapCell);
             excel.Write();
             return excel;
         }
@@ -69,11 +69,11 @@ namespace Dawn.Infrastructure.Interfaces
         /// <param name="sheetName"></param>
         /// <param name="filterProperty">导出属性过滤.如果字段不需要导出 返回 False。</param>
         /// <returns></returns>
-        public Excel AddSheet<T>(ICollection<T> list, string sheetName, Func<PropertyInfo, bool> filterProperty)
+        public Excel AddSheet<T>(ICollection<T> list, string sheetName, Func<PropertyInfo, bool> filterProperty, Action<string, IWorkbook, ICell> mapCell = null)
         {
             _filterProperty = filterProperty;
 
-            return AddSheet(list, sheetName);
+            return AddSheet(list, sheetName, mapCell);
         }
         /// <summary>
         /// 添加Sheet。如果列表超出最大行数会自动分Sheet
@@ -83,11 +83,11 @@ namespace Dawn.Infrastructure.Interfaces
         /// <param name="sheetName"></param>
         /// <param name="filterProperty">导出属性过滤.如果字段不需要导出返回 False。</param>
         /// <returns></returns>
-        public Excel AddSheet<T>(ICollection<dynamic> list, string sheetName, Func<PropertyInfo, bool> filterProperty)
+        public Excel AddSheet<T>(ICollection<dynamic> list, string sheetName, Func<PropertyInfo, bool> filterProperty, Action<string, IWorkbook, ICell> mapCell = null)
         {
             _filterProperty = filterProperty;
 
-            return AddSheet<T>(list, sheetName);
+            return AddSheet<T>(list, sheetName, mapCell);
         }
 
         /// <summary>
@@ -97,14 +97,14 @@ namespace Dawn.Infrastructure.Interfaces
         /// <param name="list"></param>
         /// <param name="sheetName"></param>
         /// <returns></returns>
-        public Excel AddSheet<T>(ICollection<dynamic> list, string sheetName)
+        public Excel AddSheet<T>(ICollection<dynamic> list, string sheetName, Action<string, IWorkbook, ICell> mapCell = null)
         {
 
             if (_isWrite)
                 throw new Exception("已完成文件流的写入，不可以再添加Sheet。");
 
             if (list.Count < EXCEL_MaxRow)
-                DynamicListWriteToSheet<T>(list, 0, list.Count, _book, sheetName);
+                DynamicListWriteToSheet<T>(list, 0, list.Count, _book, sheetName, mapCell);
             else
             {
                 int page = list.Count / EXCEL_MaxRow;
@@ -112,10 +112,10 @@ namespace Dawn.Infrastructure.Interfaces
                 {
                     int start = i * EXCEL_MaxRow;
                     int end = (i * EXCEL_MaxRow) + EXCEL_MaxRow;
-                    DynamicListWriteToSheet<T>(list, start, end, _book, sheetName + i.ToString());
+                    DynamicListWriteToSheet<T>(list, start, end, _book, sheetName + i.ToString(), mapCell);
                 }
                 int lastPageItemCount = list.Count % EXCEL_MaxRow;
-                DynamicListWriteToSheet<T>(list, list.Count - lastPageItemCount, lastPageItemCount, _book, sheetName + page.ToString());
+                DynamicListWriteToSheet<T>(list, list.Count - lastPageItemCount, lastPageItemCount, _book, sheetName + page.ToString(), mapCell);
             }
 
             return this;
@@ -128,7 +128,7 @@ namespace Dawn.Infrastructure.Interfaces
         /// <param name="list"></param>
         /// <param name="sheetName"></param>
         /// <returns></returns>
-        public Excel AddSheet<T>(ICollection<T> list, string sheetName)
+        public Excel AddSheet<T>(ICollection<T> list, string sheetName, Action<string, IWorkbook, ICell> mapCell = null)
         {
             if (_isWrite)
                 throw new Exception("已完成文件流的写入，不可以再添加Sheet。");
@@ -136,7 +136,7 @@ namespace Dawn.Infrastructure.Interfaces
             CreateCache<T>();
 
             if (list.Count < EXCEL_MaxRow)
-                ListWriteToSheet<T>(list, 0, list.Count, _book, sheetName);
+                ListWriteToSheet<T>(list, 0, list.Count, _book, sheetName, mapCell);
             else
             {
                 int page = list.Count / EXCEL_MaxRow;
@@ -144,15 +144,15 @@ namespace Dawn.Infrastructure.Interfaces
                 {
                     int start = i * EXCEL_MaxRow;
                     int end = (i * EXCEL_MaxRow) + EXCEL_MaxRow;
-                    ListWriteToSheet<T>(list, start, end, _book, sheetName + i.ToString());
+                    ListWriteToSheet<T>(list, start, end, _book, sheetName + i.ToString(), mapCell);
                 }
                 int lastPageItemCount = list.Count % EXCEL_MaxRow;
-                ListWriteToSheet<T>(list, list.Count - lastPageItemCount, lastPageItemCount, _book, sheetName + page.ToString());
+                ListWriteToSheet<T>(list, list.Count - lastPageItemCount, lastPageItemCount, _book, sheetName + page.ToString(), mapCell);
             }
             return this;
         }
 
-        protected void DynamicListWriteToSheet<T>(ICollection<dynamic> list, int startRow, int endRow, IWorkbook book, string sheetName)
+        protected void DynamicListWriteToSheet<T>(ICollection<dynamic> list, int startRow, int endRow, IWorkbook book, string sheetName, Action<string, IWorkbook, ICell> mapCell = null)
         {
             ISheet sheet = book.CreateSheet(sheetName);
             IRow header = sheet.CreateRow(0);
@@ -167,7 +167,11 @@ namespace Dawn.Infrastructure.Interfaces
                 if (propertyInfo != null)
                     name = GetPropertyName(propertyInfo);
                 cell.SetCellValue(name);
+
+                mapCell?.Invoke(name, book, cell);
             }
+
+
 
             int rowIndex = 1;
             for (int i = startRow; i < endRow; i++)
@@ -178,12 +182,24 @@ namespace Dawn.Infrastructure.Interfaces
                 for (int j = 0; j < propertyDic.Keys.Count; j++)
                 {
                     var val = row.Values.ElementAt(j);
-                    excelRow.CreateCell(j).SetCellValue(val == null ? string.Empty : val.ToString());
+                    var newCell = excelRow.CreateCell(j);
+                    newCell.CellStyle = header.GetCell(j).CellStyle;
+                    newCell.SetCellValue(val == null ? string.Empty : val.ToString());
                 }
             }
         }
 
-        protected void ListWriteToSheet<T>(ICollection<T> list, int startRow, int endRow, IWorkbook book, string sheetName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="startRow"></param>
+        /// <param name="endRow"></param>
+        /// <param name="book"></param>
+        /// <param name="sheetName"></param>
+        /// <param name="mapCell">string, ICell (列名称,Workbook对象,列对象)</param>
+        protected void ListWriteToSheet<T>(ICollection<T> list, int startRow, int endRow, IWorkbook book, string sheetName, Action<string, IWorkbook, ICell> mapCell = null)
         {
             Dictionary<PropertyInfo, string> temPropertyDic = new Dictionary<PropertyInfo, string>();
             Dictionary<PropertyInfo, string> propertyDic = new Dictionary<PropertyInfo, string>();
@@ -209,11 +225,15 @@ namespace Dawn.Infrastructure.Interfaces
             ISheet sheet = book.CreateSheet(sheetName);
             IRow header = sheet.CreateRow(0);
 
+
+
             for (int i = 0; i < propertyDic.Values.Count; i++)
             {
                 ICell cell = header.CreateCell(i);
                 string val = propertyDic.Values.ElementAt(i);
                 cell.SetCellValue(val);
+
+                mapCell?.Invoke(val, book, cell);
             }
 
             int rowIndex = 1;
@@ -228,7 +248,9 @@ namespace Dawn.Infrastructure.Interfaces
                 {
                     var p = propertyDic.Keys.ElementAt(j);
                     var val = p.FastGetValue2(row);
-                    excelRow.CreateCell(j).SetCellValue(val == null ? string.Empty : val.ToString());
+                    var cell = excelRow.CreateCell(j);
+                    cell.CellStyle = header.GetCell(j).CellStyle;
+                    cell.SetCellValue(val == null ? string.Empty : val.ToString());
                 }
             }
         }
@@ -407,12 +429,8 @@ namespace Dawn.Infrastructure.Interfaces
                     ICell cell = firstRow.GetCell(i);
                     if (cell != null)
                     {
-                        string cellValue = cell.StringCellValue;
-
-                        if (cellValue == null) cellValue = string.Empty;
-
-                        cellValue = cellValue.Trim();
-
+                        firstRow.GetCell(i).SetCellType(CellType.String);
+                        string cellValue = cell.StringCellValue.TrimNull();
                         //保存名称对应的下标
                         if (!string.IsNullOrWhiteSpace(cellValue))
                             _dicColumnName.Add(cellValue, i);
@@ -424,7 +442,7 @@ namespace Dawn.Infrastructure.Interfaces
             {
                 IRow row = _sheet.GetRow(i);
                 if (row == null) continue; //没有数据的行默认是null　
-                T item = mapRow(new SheetRow(row, _dicColumnName), startRow);
+                T item = mapRow(new SheetRow(row, _dicColumnName), i);
                 if (item != null)
                     list.Add(item);
 
@@ -498,11 +516,7 @@ namespace Dawn.Infrastructure.Interfaces
             if (cell == null)
                 return null;
 
-            var value = cell.ToString();
-
-            if (value == null) return string.Empty;
-
-            return value.Trim();
+            return cell.ToString().Trim();
         }
 
         public DateTime? GetDateTime(int column, DateTime? defVal = null)
@@ -511,8 +525,16 @@ namespace Dawn.Infrastructure.Interfaces
             if (cell == null)
                 return defVal;
 
+            string cellValue = string.Empty;
+            //Cell为非Numeric时，调用IsCellDateFormatted方法会报错，所以先要进行类型判断
+            if (cell.CellType == CellType.Numeric && DateUtil.IsCellDateFormatted(cell))
+                cellValue = cell.DateCellValue.ToLongDateString();
+            else
+            {
+                cellValue = cell.StringCellValue.Trim();
+            }
             DateTime dt;
-            if (DateTime.TryParse(cell.DateCellValue.ToLongDateString(), out dt))
+            if (DateTime.TryParse(cellValue, out dt))
                 return dt;
 
             return defVal;
@@ -562,6 +584,11 @@ namespace Dawn.Infrastructure.Interfaces
             }
 
             return defVal;
+        }
+
+        public short GetLastCellNum()
+        {
+            return _row.LastCellNum;
         }
 
     }
