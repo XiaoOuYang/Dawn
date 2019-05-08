@@ -81,7 +81,21 @@ namespace Dawn.Infrastructure.Interfaces
                 TaskAction = taskAction
             };
 
-            _queues.ElementAt((seconds % _slotNum) + _currentIndex).Add(taskContext);
+             try
+            {
+
+                //taskContext.CycleNum =
+
+                int index = (seconds % _slotNum) + _currentIndex;
+                if (index >= _slotNum)
+                    taskContext.CycleNum += (index / _slotNum);
+
+                _queues.ElementAt(index % _slotNum).Add(taskContext);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"秒:{seconds},插槽的数量:{_queues.Count},当前:{_currentIndex}" + ex.Message);
+            }
 
         }
 
